@@ -4,6 +4,8 @@ const server = http.createServer((req, res) => {
   res.end("Hello from CI/CD Pipeline 🚀");
 });
 
+console.log("Hello HeadShot...🧨");
+
 server.listen(3000, () => {
   console.log("Server running on port 3000");
 });
