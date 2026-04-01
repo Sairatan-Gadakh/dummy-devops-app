@@ -1,0 +1,52 @@
+stages:
+  - build
+  - test
+  - docker
+  - deploy
+
+variables:
+  IMAGE_NAME: $DOCKER_USERNAME/devops-app
+
+# -------------------
+# BUILD
+# -------------------
+build:
+  stage: build
+  image: node:18
+  script:
+    - npm install
+    - echo "Build complete"
+
+# -------------------
+# TEST
+# -------------------
+test:
+  stage: test
+  image: node:18
+  script:
+    - npm test
+
+# -------------------
+# DOCKER BUILD + PUSH
+# -------------------
+docker-build:
+  stage: docker
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker build -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
+
+# -------------------
+# DEPLOY
+# -------------------
+deploy:
+  stage: deploy
+  image: docker:latest
+  script:
+    - docker stop devops-container || true
+    - docker rm devops-container || true
+    - docker pull $IMAGE_NAME
+    - docker run -d -p 3000:3000 --name devops-container $IMAGE_NAME
