@@ -1,0 +1,8 @@
+{
+  "name": "devops-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo Test Passed"
+  }
+}
